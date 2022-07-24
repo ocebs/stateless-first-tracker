@@ -23,6 +23,7 @@ const top10Message = ({
           ((score.modifiedScore ?? 0) / leaderboard.maxScore) *
           100
         ).toFixed(2)}%`,
+        `**Rank**: #${score.rank}`,
         `**PP**: ${score.pp}`,
         `**Time Set**: <t:${new Date(score.timeSet).getTime() / 1000}>`,
       ].join("\n"),
