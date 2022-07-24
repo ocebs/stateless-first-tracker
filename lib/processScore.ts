@@ -6,7 +6,13 @@ import { sendMessage } from "./webhook.ts";
 export default async function processScore(
   score: ScoreSaber["schemas"]["PlayerScore"]
 ) {
-  if (score.score.rank <= 10) {
+  if (
+    score.score.rank <= 10 &&
+    score.leaderboard.ranked &&
+    ["AU", "NZ"].includes(
+      score.score.leaderboardPlayerInfo?.country.toUpperCase() ?? ""
+    )
+  ) {
     await sendMessage(Channel.top10, [top10Message(score)]);
   }
 }
