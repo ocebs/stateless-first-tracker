@@ -17,6 +17,10 @@ const top10Message = ({
   timestamp: score.timeSet,
   fields: [
     {
+      name: `${leaderboard.songAuthorName} - ${leaderboard.songName} ${leaderboard.songSubName}`,
+      value: `[Leaderboard](https://scoresaber.com/leaderboard/${leaderboard.id}?countries=AU,NZ)`,
+    },
+    {
       name: "Score",
       value: [
         `**Accuracy**: ${(

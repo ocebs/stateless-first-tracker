@@ -8,6 +8,10 @@ const firstMessage = (
 ) => {
   const fields = [
     {
+      name: `${leaderboard.songAuthorName} - ${leaderboard.songName} ${leaderboard.songSubName}`,
+      value: `[Leaderboard](https://scoresaber.com/leaderboard/${leaderboard.id}?countries=AU,NZ)`,
+    },
+    {
       name: "New Score",
       value: [
         `**Accuracy**: ${(
@@ -35,6 +39,7 @@ const firstMessage = (
     });
   return {
     title: `${score.leaderboardPlayerInfo?.name} set a new top OCE score`,
+
     image: { url: leaderboard.coverImage },
     url: `https://scoresaber.com/leaderboard/${leaderboard.id}?countries=au,nz`,
     thumbnail: {
