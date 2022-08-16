@@ -32,6 +32,7 @@ export default async function processScore(
       data: score.leaderboard,
       score: score.score,
     });
+    client.rpc("update_firsts");
     sendMessage(Channel.first, { message: firstMessage(score) });
   }
 }
