@@ -1,3 +1,4 @@
+import client from "./client.ts";
 import firstMessage from "./messages/first.ts";
 import top10Message from "./messages/top10.ts";
 import type { components as ScoreSaber } from "./types/scoresaber.ts";
@@ -15,7 +16,7 @@ export default async function processScore(
   )
     return;
   if (score.score.rank <= 10) {
-    await sendMessage(Channel.top10, [top10Message(score)]);
+    await sendMessage(Channel.top10, { message: top10Message(score) });
   }
 
   const leaderboardResponse = await fetch(
@@ -26,6 +27,11 @@ export default async function processScore(
   const { scores } =
     (await leaderboardResponse.json()) as ScoreSaber["schemas"]["ScoreCollection"];
 
-  if (score.score.modifiedScore === scores[0].modifiedScore)
-    sendMessage(Channel.first, [firstMessage(score, scores[1])]);
+  if (score.score.modifiedScore === scores[0].modifiedScore) {
+    await client.from("map").upsert({
+      data: score.leaderboard,
+      score: score.score,
+    });
+    sendMessage(Channel.first, { message: firstMessage(score) });
+  }
 }

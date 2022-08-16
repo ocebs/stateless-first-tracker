@@ -1,18 +1,14 @@
 import type { components as ScoreSaber } from "../types/scoresaber.ts";
-import type { DiscordEmbed } from "https://deno.land/x/discordeno@13.0.0-rc45/types/discord.ts";
+import type { DiscordMessage } from "https://deno.land/x/discordeno@13.0.0-rc45/types/discord.ts";
 import difficultyColour from "./colours.ts";
 
 const firstMessage = (
   { leaderboard, score }: ScoreSaber["schemas"]["PlayerScore"],
   oldScore?: ScoreSaber["schemas"]["Score"]
-) => {
+): Partial<DiscordMessage> => {
   const fields = [
     {
       name: `${leaderboard.songAuthorName} - ${leaderboard.songName} ${leaderboard.songSubName}`,
-      value: `[Leaderboard](https://scoresaber.com/leaderboard/${leaderboard.id}?countries=AU,NZ)`,
-    },
-    {
-      name: "New Score",
       value: [
         `**Accuracy**: ${(
           ((score.modifiedScore ?? 0) / leaderboard.maxScore) *
@@ -26,7 +22,7 @@ const firstMessage = (
   ];
   if (oldScore)
     fields.push({
-      name: "Old Score",
+      name: "Second Place",
       value: [
         `**Set By**: [${oldScore.leaderboardPlayerInfo?.name}](https://scoresaber.com/u/${oldScore.leaderboardPlayerInfo?.id})`,
         `**Accuracy**: ${(
@@ -38,18 +34,41 @@ const firstMessage = (
       ].join("\n"),
     });
   return {
-    title: `${score.leaderboardPlayerInfo?.name} set a new top OCE score`,
+    embeds: [
+      {
+        title: `${score.leaderboardPlayerInfo?.name} set a new top OCE score`,
 
-    image: { url: leaderboard.coverImage },
-    url: `https://scoresaber.com/leaderboard/${leaderboard.id}?countries=au,nz`,
-    thumbnail: {
-      url:
-        score.leaderboardPlayerInfo?.profilePicture ??
-        "https://cdn.scoresaber.com/avatars/oculus.png",
-    },
-    timestamp: score.timeSet,
-    fields,
-    color: difficultyColour(leaderboard.difficulty.difficultyRaw),
+        image: { url: leaderboard.coverImage },
+        url: `https://scoresaber.com/leaderboard/${leaderboard.id}?countries=au,nz`,
+        thumbnail: {
+          url:
+            score.leaderboardPlayerInfo?.profilePicture ??
+            "https://cdn.scoresaber.com/avatars/oculus.png",
+        },
+        timestamp: score.timeSet,
+        fields,
+        color: difficultyColour(leaderboard.difficulty.difficultyRaw),
+      },
+    ],
+    components: [
+      {
+        type: 1,
+        components: [
+          {
+            type: 2,
+            style: 5,
+            url: `https://scoresaber.com/u/${score.leaderboardPlayerInfo?.id}`,
+            label: "Player Profile",
+          },
+          {
+            type: 2,
+            style: 5,
+            url: `https://scoresaber.com/leaderboard/${leaderboard.id}?countries=AU,NZ`,
+            label: "Full Leaderboard",
+          },
+        ],
+      },
+    ],
   };
 };
 

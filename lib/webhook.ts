@@ -1,4 +1,4 @@
-import type { DiscordEmbed } from "https://deno.land/x/discordeno@13.0.0-rc45/types/discord.ts";
+import type { DiscordMessage } from "https://deno.land/x/discordeno@13.0.0-rc45/types/discord.ts";
 import { assertExists } from "https://deno.land/std@0.146.0/testing/asserts.ts";
 
 const { TOP_10_URL, FIRST_TRACKER_URL } = Deno.env.toObject();
@@ -10,8 +10,15 @@ export enum Channel {
   top10,
 }
 
-export const sendMessage = (channel: Channel, embeds: DiscordEmbed[]) => {
-  const body = JSON.stringify({ embeds });
+export const sendMessage = (
+  channel: Channel,
+  {
+    message,
+  }: {
+    message: Partial<DiscordMessage>;
+  }
+) => {
+  const body = JSON.stringify(message);
 
   return fetch(channel == Channel.first ? FIRST_TRACKER_URL : TOP_10_URL, {
     method: "post",
