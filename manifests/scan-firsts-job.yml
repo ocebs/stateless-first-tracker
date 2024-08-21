@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: full-scan-firsts
+spec:
+  schedule: "10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: scan-firsts
+            image: first-tracker
+            envFrom:
+              - secretRef:
+                  name: first-tracker
+            command:
+            - /bin/deno
+            - run
+            - -A
+            - /app/util/scanFirsts.ts
+          restartPolicy: OnFailure

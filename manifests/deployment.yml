@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: realtime-firsts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: realtime-firsts
+  template:
+    metadata:
+      labels:
+        app: realtime-firsts
+    spec:
+      containers:
+      - name: realtime-firsts
+        image: first-tracker
+        envFrom:
+          - secretRef:
+              name: first-tracker
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

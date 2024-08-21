@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - populate-map-job.yml
+  - scan-firsts-job.yml
+  - deployment.yml
+images:
+  - name: first-tracker
+secretGenerator:
+  - name: first-tracker
+    envs:
+      - first-tracker.secret.env
+
+commonLabels:
+  app: oce-first-tracker
